@@ -14,6 +14,7 @@ const AddNote = () => {
   const handleChange = (e) => {
     setNote({ ...note, [e.target.name]: e.target.value });
   };
+  
   return (
     <div>
       <h1>Add a note</h1>

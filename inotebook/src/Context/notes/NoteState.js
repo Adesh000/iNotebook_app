@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import NoteContext from "./noteContext";
 
 const NoteState = (props) => {
-  const host = "http://localhost5000/";
+  const host = "http://localhost:5000/";
+
   const [notes, setNotes] = useState([]);
   
   const getNotes = async () => {
@@ -31,7 +32,7 @@ const NoteState = (props) => {
       body: JSON.stringify({ title, description, tag }),
     });
 
-    const json = response.json();
+    
 
     console.log("Adding new note");
     const note = {
@@ -48,15 +49,15 @@ const NoteState = (props) => {
   };
 
   const deleteNote = async (id) => {
-    // const response = await fetch(`${host}api/notes/addnote`, {
-    //   method: "POST",
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjM5MzIxODUzM2ZiOTVhM2JjYTRkOGI5In0sImlhdCI6MTY3MDc1MzkyM30.ox4raT_-DdPkmZSYMtUkP0PB2zhw9tqRnaJ3jHjTEM4'
-    //   },
-    //   body: JSON.stringify({title, description, tag})
-    // })
-    // const json = response.json()
+    const response = await fetch(`${host}api/notes/deletenote/${id}`, {
+      method: "DELETE",
+      headers: {
+        'Content-Type': 'application/json',
+        'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjM5MzIxODUzM2ZiOTVhM2JjYTRkOGI5In0sImlhdCI6MTY3MDc1MzkyM30.ox4raT_-DdPkmZSYMtUkP0PB2zhw9tqRnaJ3jHjTEM4'
+      }
+    })
+    const json = response.json()
+    console.log(json)
     console.log("Deleting a Note");
     const newNotes = notes.filter((note) => note._id !== id);
     setNotes(newNotes);
