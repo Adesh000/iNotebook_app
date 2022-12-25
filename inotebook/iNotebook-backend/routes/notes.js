@@ -7,7 +7,7 @@ const Note = require("../models/Note");
 // Route 1: Get all hte notes
 router.get("/fetchallnotes", fetchuser, async (req, res) => {
     try {
-        const notes = await Notes.find({ user: req.user.id });
+        const notes = await Note.find({ user: req.user.id });
         res.json(notes);
     } catch (error) {
         console.error(error.message);
@@ -36,7 +36,7 @@ router.post("/addnote", fetchuser, [
                 user: req.user.id,
             });
             const savedNote = note.save();
-            req.json(savedNote)
+            res.json(savedNote)
 
         } catch (error) {
             console.error(error.message);
@@ -63,7 +63,7 @@ router.put('/updatenote/:d', fetchuser, async (req, res) =>{
     }
 
     note = await Note.findByIdAndUpdate(req.params.id, {$set: newNote}, {new:true} )
-    res.json(note);
+    res.json({note});
 
 })
 
