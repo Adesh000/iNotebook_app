@@ -7,22 +7,22 @@ import NoteState from "./Context/notes/NoteState";
 import Alert from "./Components/Alert";
 
 function App() {
-    return (
-        <div>
-            <NoteState>
-                <BrowserRouter>
-                    <Navbar />
-                    <Alert />
-                    <div className="container">
-                        <Routes>
-                            <Route path="/" element={<Home />} />
-                            <Route path="/about" element={<About />} />
-                        </Routes>
-                    </div>
-                </BrowserRouter>
-            </NoteState>
-        </div>
-    );
+  return (
+    <div>
+      <NoteState>
+        <BrowserRouter>
+          <Navbar />
+          <Alert />
+          <div className="container">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+            </Routes>
+          </div>
+        </BrowserRouter>
+      </NoteState>
+    </div>
+  );
 }
 
 export default App;
