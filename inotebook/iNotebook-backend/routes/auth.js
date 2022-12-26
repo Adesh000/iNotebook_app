@@ -16,9 +16,10 @@ router.post(
         body("password", "more than 5 characters").isLength({ min: 5 }),
     ],
     async (req, res) => {
+        let success = false;
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({
+            return res.status(400).json({success,
                 error: errors.array(),
             });
         }
@@ -29,7 +30,7 @@ router.post(
         if (user) {
             return res
                 .status(400)
-                .json({ error: "Sorry with this email user already exists" });
+                .json({success, error: "Sorry with this email user already exists" });
         }
 
         // bcrypt hashing
@@ -52,8 +53,8 @@ router.post(
         };
 
         const authtoken = jwt.sign(data, JWT_SECRET);
-
-        res.json({ authtoken });
+        success = true;
+        res.json({ success, authtoken });
     }
 );
 
@@ -66,6 +67,7 @@ router.post(
     ],
     async (req, res) => {
         // if there are errors return a bad request and errors
+        let success = false;
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
@@ -90,9 +92,10 @@ router.post(
                 user.password
             );
             if (!passwordCompare) {
+                success = false
                 return res
                     .status(400)
-                    .json({
+                    .json({ success,
                         error: "Please try to login with correct credentials",
                     });
             }
@@ -106,8 +109,8 @@ router.post(
             };
 
             const authtoken = jwt.sign(data, JWT_SECRET);
-
-            res.json({ authtoken });
+            success = true
+            res.json({success, authtoken });
         } catch (error) {
             console.error(error.message);
             res.status(500).send("Internal server error");
