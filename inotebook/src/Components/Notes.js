@@ -5,7 +5,7 @@ import NotesItem from "./NotesItem";
 
 const Notes = () => {
   const context = useContext(noteContext);
-  const { notes, getNotes } = context;
+  const { notes, getNotes, editNote } = context;
   const [note, setNote] = useState({ etitle: "", edescription: "", etag: "" });
 
   useEffect(() => {
@@ -14,30 +14,37 @@ const Notes = () => {
   }, []);
 
   const ref = useRef(null);
+  const refClose = useRef(null);
 
   const updateNote = (currentnote) => {
     ref.current.click();
-    setNote({etitle: currentnote.title, edescription: currentnote.description, etag: currentnote.tag})
+    setNote({
+      id: currentnote._id,
+      etitle: currentnote.title,
+      edescription: currentnote.description,
+      etag: currentnote.tag,
+    });
   };
 
   const handleClick = (e) => {
-    e.preventDefault()
-  }
+    editNote(note.id, note.etitle, note.edescription, note.etag)
+    refClose.current.click()
+  };
 
   const handleChange = (e) => {
-    setNote({...note, [e.target.name]: e.target.value})
-  }
+    setNote({ ...note, [e.target.name]: e.target.value });
+  };
 
   return (
     <div>
       <AddNote />
 
       <button
-        type="button"
-        className="btn btn-primary"
-        data-toggle="modal"
-        data-target="#exampleModal"
         ref={ref}
+        type="button"
+        className="btn btn-primary d-none"
+        data-bs-toggle="modal"
+        data-bs-target="#exampleModal"
       >
         Launch demo modal
       </button>
@@ -45,25 +52,22 @@ const Notes = () => {
       <div
         className="modal fade"
         id="exampleModal"
-        tabIndex="-1"
-        role="dialog"
+        tabindex="-1"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
       >
-        <div className="modal-dialog" role="document">
+        <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title" id="exampleModalLabel">
+              <h1 className="modal-title fs-5" id="exampleModalLabel">
                 Modal title
-              </h5>
+              </h1>
               <button
                 type="button"
-                className="close"
-                data-dismiss="modal"
+                className="btn-close"
+                data-bs-dismiss="modal"
                 aria-label="Close"
-              >
-                <span aria-hidden="true">&times;</span>
-              </button>
+              ></button>
             </div>
             <div className="modal-body">
               <form>
@@ -77,6 +81,7 @@ const Notes = () => {
                       className="form-control"
                       id="title"
                       name="etitle"
+                      value={note.etitle}
                       onChange={handleChange}
                     />
                   </div>
@@ -94,6 +99,7 @@ const Notes = () => {
                       className="form-control"
                       id="description"
                       name="edescription"
+                      value={note.edescription}
                       onChange={handleChange}
                     />
                   </div>
@@ -108,42 +114,23 @@ const Notes = () => {
                       className="form-control"
                       id="tag"
                       name="etag"
+                      value={note.etag}
                       onChange={handleChange}
                     />
                   </div>
                 </div>
-                <div className="row mb-3">
-                  <div className="col-sm-10 offset-sm-2">
-                    <div className="form-check">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                        id="gridCheck1"
-                      />
-                      <label className="form-check-label" htmlFor="gridCheck1">
-                        Example checkbox
-                      </label>
-                    </div>
-                  </div>
-                </div>
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                  onClick={handleClick}
-                >
-                  Submit
-                </button>
               </form>
             </div>
             <div className="modal-footer">
               <button
+              ref={refClose}
                 type="button"
                 className="btn btn-secondary"
-                data-dismiss="modal"
+                data-bs-dismiss="modal"
               >
                 Close
               </button>
-              <button type="button" className="btn btn-primary">
+              <button type="button" className="btn btn-primary" onClick={handleClick}>
                 Save changes
               </button>
             </div>
@@ -152,6 +139,7 @@ const Notes = () => {
       </div>
       <div className="row my-3">
         <h1>Your Notes</h1>
+        {notes.length === 0 && 'No notes to display'}
         {notes.map((note) => {
           return <NotesItem updateNote={updateNote} note={note} />;
         })}
